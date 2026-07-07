@@ -1,6 +1,20 @@
 # ZMI — Powtórka do egzaminu
 
 ---
+ 
+## Spis treści
+ 
+1. [Podstawy Linux](#1-podstawy-linux) — SSH, katalogi, skróty terminala, Kali
+2. [Enumeracja lokalna](#2-enumeracja-lokalna-przydatne-polecenia) — polecenia systemowe, sieciowe, cron
+3. [Enumeracja sieci](#3-enumeracja-sieci) — Nmap, flagi, alternatywy
+4. [Podstawy Web](#4-podstawy-web) — Burp Suite, alternatywy, deobfuskacja
+5. [Enumeracja Web](#5-enumeracja-web-brute-force-zasobów) — gobuster, ffuf, Hydra
+6. [Transfer plików](#6-transfer-plików-przez-protokoły-sieciowe) — TCP vs UDP, HTTP/FTP/SMB/SCP, nc/socat
+7. [Zdalne powłoki](#7-zdalne-powłoki-remote-shells) — bind vs reverse shell, hardening SSH
+8. [Eskalacja uprawnień i backdoory](#8-eskalacja-uprawnień-i-wykrywanie-backdoorów) — GTFOBins, linPEAS, SUID, sudo
+9. [Ściąga końcowa — przykładowy egzamin](#ściąga-końcowa--przykładowy-egzamin) — odpowiedzi z uzasadnieniami
+
+---
 
 ## 1. Podstawy Linux
 
