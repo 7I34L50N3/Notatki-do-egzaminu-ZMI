@@ -60,19 +60,55 @@ Logika kluczy: klucz **publiczny** (`id_rsa.pub`) trafia na serwer do `~/.ssh/au
 Dystrybucja oparta na **Debianie**, przeznaczona do testów penetracyjnych. Może działać w trybie **Live** (bez instalacji). Preinstalowane narzędzia: **Metasploit** (framework do eksploitacji), **Nmap** (skaner sieciowy), **Wireshark** (analiza ruchu), **John the Ripper** (łamanie haseł), **Burp Suite** (testy web).
 
 ---
-
+ 
 ## 2. Enumeracja lokalna (przydatne polecenia)
-
-**Użytkownicy / system:** `whoami`, `id` (UID/GID/grupy), `who`/`w`, `last` (historia logowań), `cat /etc/passwd`, `env`, `echo $USER`.
-
-**Wersja systemu:** `uname -a` (jądro, host, architektura), `cat /etc/os-release`, `cat /etc/issue`, `cat /proc/version`.
-
-**Sprzęt:** `lscpu`/`cat /proc/cpuinfo`, `free -h`/`cat /proc/meminfo`, `lspci`, `lsusb`, `lsblk`, `df -h`.
-
-**Sieć:** `ip a` (interfejsy/IP), `ip r` (routing), `ip n` (tablica sąsiadów ARP), `cat /etc/resolv.conf` (DNS), `ss -tlp` (nasłuchujące porty TCP + proces), `ss -tp`.
-
-**Procesy:** `ps aux` (wszystkie procesy), `ps auxf` (drzewo), `top` (na żywo).
-
+ 
+**Użytkownicy / system:**
+| Polecenie | Działanie |
+|---|---|
+| `whoami` | nazwa bieżącego użytkownika |
+| `id` | UID / GID / grupy |
+| `who` / `w` | zalogowani użytkownicy |
+| `last` | historia logowań |
+| `cat /etc/passwd` | konta w systemie |
+| `env` | zmienne środowiskowe |
+| `echo $USER` | nazwa użytkownika ze zmiennej |
+ 
+**Wersja systemu:**
+| Polecenie | Działanie |
+|---|---|
+| `uname -a` | jądro, host, architektura |
+| `cat /etc/os-release` | nazwa i wersja dystrybucji |
+| `cat /etc/issue` | komunikat powitalny / wersja |
+| `cat /proc/version` | wersja jądra i kompilatora |
+ 
+**Sprzęt:**
+| Polecenie | Działanie |
+|---|---|
+| `lscpu` / `cat /proc/cpuinfo` | procesor |
+| `free -h` / `cat /proc/meminfo` | pamięć RAM |
+| `lspci` | urządzenia PCI |
+| `lsusb` | urządzenia USB |
+| `lsblk` | dyski i partycje |
+| `df -h` | użycie przestrzeni dyskowej |
+ 
+**Sieć:**
+| Polecenie | Działanie |
+|---|---|
+| `ip a` | interfejsy i adresy IP |
+| `ip r` | tablica routingu |
+| `ip n` | tablica sąsiadów (ARP) |
+| `cat /etc/resolv.conf` | serwery DNS |
+| `ss -tlp` | nasłuchujące porty TCP + proces |
+| `ss -tp` | aktywne połączenia TCP |
+ 
+**Procesy:**
+| Polecenie | Działanie |
+|---|---|
+| `ps aux` | wszystkie procesy |
+| `ps auxf` | procesy jako drzewo hierarchii |
+| `top` | podgląd na żywo (CPU/RAM) |
+ 
 **Pliki i wyszukiwanie:**
 | Polecenie | Działanie |
 |---|---|
@@ -80,9 +116,9 @@ Dystrybucja oparta na **Debianie**, przeznaczona do testów penetracyjnych. Moż
 | `locate .conf` | szybkie wyszukiwanie z bazy danych |
 | `grep sh /etc/passwd` | linie zawierające "sh" (aktywne powłoki) |
 | `grep -v nologin /etc/passwd` | linie **bez** "nologin" (użytkownicy z powłoką) |
-
+ 
 **Cron:** `cat /etc/crontab` (globalne zadania), `crontab -e` (edycja zadań użytkownika). Format: `* * * * *` = co minutę. Zadania cron ze **złymi uprawnieniami** to typowy wektor eskalacji.
-
+ 
 ---
 
 ## 3. Enumeracja sieci
