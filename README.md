@@ -1,11 +1,5 @@
 # ZMI — Powtórka do egzaminu
 
-Skondensowana ściąga z materiału: definicje, przeznaczenie narzędzi, kluczowe flagi.
-Ułożona pod typ pytań z przykładowego egzaminu (test jednokrotnego wyboru).
-
-> **Szybkie odpowiedzi z przykładowego egzaminu** (na dole pełne uzasadnienia):
-> 1-`gobuster` · 2-`-sU` · 3-A · 4-`nmap` · 5-`HTTP` · 6-D · 7-B · 8-B (SUID/SGID) · 9-C · 10-`-l`
-
 ---
 
 ## 1. Podstawy Linux
