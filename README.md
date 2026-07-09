@@ -264,39 +264,76 @@ Pozwalają zdalnie wykonywać polecenia powłoki na maszynie celu. Działają w 
 - Zmiana domyślnego portu (22) **nie jest** realnym zabezpieczeniem, tylko utrudnieniem.
 
 ---
-
+ 
 ## 8. Eskalacja uprawnień i wykrywanie backdoorów
-
+ 
 **Backdoor** = **ukryte wejście do systemu omijające uwierzytelnienie**. Cel serii zadań: eskalacja do **root**.
-
+ 
 ### Narzędzia analizy
 - **GTFOBins** (`gtfobins.github.io`) — baza legalnych narzędzi Unix/Linux nadużywalnych do eskalacji, obejścia zabezpieczeń, zdalnych powłok. Np. `tar`, `vim`, `service`, `python3` mogą uruchomić powłokę.
 - **linPEAS** (`linpeas.sh`) — automatyczna enumeracja podatności. Bywa niedokładny — generuje **false-positive**.
-
+### Uprawnienia plików (rwx i tryb ósemkowy)
+Uprawnienia widoczne w `ls -l`, np. `-rwxr-xr--`, dzielą się na trzy grupy po trzy znaki: **właściciel (User)** → **grupa (Group)** → **pozostali (Others)**.
+ 
+| Znak | Znaczenie | Wartość ósemkowa |
+|---|---|---|
+| `r` | odczyt (read) | 4 |
+| `w` | zapis (write) | 2 |
+| `x` | wykonanie (execute) | 1 |
+| `-` | brak uprawnienia | 0 |
+ 
+Wartość dla każdej grupy = suma (np. `rwx` = 4+2+1 = **7**, `r-x` = 4+0+1 = **5**, `r--` = **4**).
+ 
+| Zapis | rwx | Znaczenie |
+|---|---|---|
+| `chmod 755` | `rwxr-xr-x` | właściciel wszystko, reszta odczyt+wykonanie |
+| `chmod 644` | `rw-r--r--` | właściciel odczyt+zapis, reszta tylko odczyt |
+| `chmod 700` | `rwx------` | tylko właściciel (np. katalog `~/.ssh`) |
+| `chmod 600` | `rw-------` | tylko właściciel (np. klucz prywatny SSH) |
+ 
+### Podział na cztery cyfry (bity specjalne)
+Pełny zapis ma **cztery cyfry** — pierwsza to uprawnienia **specjalne**, kolejne trzy to znane User/Group/Others. Przykład **`4000`**:
+ 
+| Cyfra | Grupa | Znaczenie |
+|---|---|---|
+| **4** | uprawnienia specjalne | ustawiony bit **SUID** |
+| **0** | właściciel (User) | brak |
+| **0** | grupa (Group) | brak |
+| **0** | pozostali (Others) | brak |
+ 
+Wartości pierwszej cyfry (bity specjalne):
+| Wartość | Bit | Efekt |
+|---|---|---|
+| **4** | **SUID** | plik uruchamia się z uprawnieniami **właściciela** (często root) → wektor eskalacji |
+| **2** | **SGID** | plik uruchamia się z uprawnieniami **grupy** |
+| **1** | **sticky bit** | w katalogu: plik może usunąć tylko jego właściciel (np. `/tmp`) |
+ 
+> W `ls -l` bit SUID widać jako `s` w miejscu `x` właściciela, np. `-rwsr-xr-x`. Ustawienie: `chmod u+s plik` lub `chmod 4755 plik`.
+> Stąd maska `/6000` w poleceniu poniżej = SUID (4000) **lub** SGID (2000).
+ 
 ### SUID / SGID
 ```
 find / -type f -perm /6000 2>/dev/null
 ```
 > **Wyświetla wszystkie pliki zwykłe z ustawionym bitem SUID/SGID** (`/6000` = SUID 4000 + SGID 2000). Bit SUID = plik uruchamia się z uprawnieniami właściciela (często root) → wektor eskalacji.
 > Porównanie z czystym systemem: `find / -type f -perm /6000 -exec sha1sum {} \; 2>/dev/null`.
-
+ 
 ### sudo
 | Flaga | Znaczenie |
 |---|---|
 | `sudo -l` | **lista poleceń** dostępnych przez sudo dla użytkownika |
 | `sudo -k` | unieważnia zapamiętane hasło (cache) |
 | `sudo su` | przejście na roota (gdy dozwolone) |
-
+ 
 **Typowe wektory eskalacji (z GTFOBins):**
 - `sudo /usr/bin/python3 -c "import os; os.system('/bin/bash')"`
 - `sudo vim` → `:!bash`
 - `sudo service ../../bin/bash`
 - Zapis do `/etc/passwd` (np. root bez hasła → `su`) lub nadpisanie przez `sudo curl file:// -o /etc/passwd`
 - `bash` **bez** `-p` ignoruje SUID i cofa uprawnienia — dlatego przy SUID-bash używa się `-p`.
-
 ### Historia przypadków (dlaczego to ważne)
 Uber (2016, backup z kluczami API), Equifax (2017, niezałatany serwer), NASA (2018), Facebook (2019, hasła plaintext), Microsoft (2021, otwarte logi) — wycieki przez źle zabezpieczone/ukryte zasoby.
-
+ 
 ---
 
 ## Ściąga końcowa — przykładowy egzamin
